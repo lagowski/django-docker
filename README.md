@@ -13,7 +13,7 @@ Steps for start project in Django  using Docker, We use `<projectname>` as refer
 
 Se descarga el proyecto que contiene la estructura general.
 ```
-git clone https://github.com/lagowski/docker-django.git <projectname>
+git clone https://github.com/lagowski/django-docker.git <projectname>
 ```
 
 **_Remove Git folder_**
