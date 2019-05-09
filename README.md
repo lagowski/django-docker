@@ -1,105 +1,106 @@
 Django - Docker
 ====================
 
-Pasos para iniciar un proyecto con Django utilizando Docker dentro del flujo de trabajo. Se utiliza `projectname` para hacer referencia al nombre del projecto.
+Steps for start project in Django  using Docker, We use `<projectname>` as reference to project name
 
-### Pre requisito
+### Prereq
 
-* Tener instalado **Docker**. Si está utilizando Mac OS X instale **Docker Toolbox**.
+* Installed  **Docker**.
 
-## Paso Uno - Establecer Estructura.
+## Step 1 - Structure.
 
-**_Descargar estructura del proyecto_**
+**_Download the structure of the project_**
 
 Se descarga el proyecto que contiene la estructura general.
 ```
-git clone https://github.com/mmorejon/docker-django.git projectname
+git clone https://github.com/lagowski/docker-django.git <projectname>
 ```
 
-**_Eliminar carpeta de Git_**
+**_Remove Git folder_**
 
-La carpeta `.git` se elimina para crear un nuevo repositorio.
+Remove  `.git` and create new repository.
 
 ```
-cd projectname
+cd <projectname>
 rm -rf .git/
 ```
 
-**_Crear nuevo repositorio dentro del proyecto_**
+**_Create new repository inside of project_**
 
-Se inicia el control de versiones dentro de la carpeta del proyecto para registrar los cambios.
+Initialize Version Control inside of folder.
 
 ```
 git init
 ```
 
-## Paso Dos - Crear Imagen de Docker
+## Step 2 - Docker Image
 
-**_Crear Imagen en Docker_**
+**_Create Docker Image (NOT NECESSARY STEP)_**
 
-Se crea la imagen de Docker para el projecto. La imagen va a contener la instalación de los requerimientos establecidos en el fichero `requirements.txt`.
+Create Docker Image of the project. Image will contains installation of requerements that are inside of `requirements.txt`.
 
-El fichero `requirements.txt` contiene los requisitos básicos para el inicio y despliegue de una aplicación con Django, si necesita adicionarle nuevos elementos este es un buen momento.
+The `requirements.txt` contains basic requirements for start and run app with Django. If you need add sometnig more this is the moment.
 
 ```
-docker build -t projectname:1.0 .
+docker build -t <projectname>:1.0 .
 ```
 
-Siempre que modifique los elementos dentro del fichero `requirements.txt` tiene que repetir este paso.
+Always when you modify file `requirements.txt` you have to repeat this step.
 
 
-**_Configurar Docker Compose_**
+**_Configure Docker Compose_**
 
-En el fichero `docker-compose.yml` se modifica el nombre de la imagen que será utilizada. El nombre de la imagen se ha establecido en el paso anterior. La zona que se modifica dentro del fichero es la siguiente:
+In file `docker-compose.yml` you have to modify name of image that will be used. The name of image described in last step. You have to modify this line:
 ```
-image: projectname:1.0
-```
-
-## Paso Tres - Crear Proyecto Django
-
-**_Crear Proyecto_**
-Se crea el proyecto utilizando los mismos comandos descritos por el sitio Django.
-```
-docker-compose run web django-admin startproject projectname .
+image: <projectname>:1.0
 ```
 
-**_Probar el sistema_**
-Para probar si el sistema está funcionando correctamente se ejectua el siguiente comando. En el navegador se puede revisar la aplicación en la siguiente dirección `http://<ip-máquina:8000>`. El puerto de salida puede ser configurado en el fichero `docker-compose.yml`.
+
+## Step 3 -  Create Django Project
+
+**_Project creation_**
+Create the project with same commandslike in Django.
+```
+docker-compose run web django-admin startproject <projectname> .
+```
+
+**_Try the system_**
+To see if the system is working propertly Para probar si el sistema está funcionando correctamente se ejectua el siguiente comando. En el navegador se puede revisar la aplicación en la siguiente dirección `http://<ip-máquina:8000>`. El puerto de salida puede ser configurado en el fichero `docker-compose.yml`.
 ```
 docker-compose up
 ```
 
-**_Para el sistema_**
+**_Stop the system_**
 Se detiene el sistema de ser necesario para continuar con las configuraciones.
 ```
 Ctrl-C
 ```
 
-## Paso Cuatro - Crear Aplicación
+## Step 4 - Create Application Inside of Project
 
-Para crear una aplicación dentro del proyecto Django se utiliza el siguiente comando:
+For create app we need use a django command, but we want it inside of project:
 ```
-docker-compose run web python manage.py startapp app
-```
-
-## Paso Cinco - Crear Usuario
-
-Los usuarios se crean utilizando el mismo comando descrito en la documentación de Django.
-```
-docker-compose run web python manage.py createsuperuser
+docker-compose run web sh -c "cd <projectname>; python manage.py startapp app"
 ```
 
-## Paso Seis - Entorno de Producción
+## Step 5 - Create User"
 
-Para utilizar la aplicación en el entorno de producción se debe configurar los siguientes ficheros:
+Another command of django
+```
+docker-compose run web sh -c "cd <projectname>; python manage.py createsuperuser"
+```
 
-Adicionar al final del fichero `projectname/settings.py` la siguiente línea:
+## Step 6 - Production Environment
+
+To use this project in production environment we nedd make some changes
+
+At the end  of file `projectname/settings.py` add this line:
 
 ```
 STATIC_ROOT = './static/'
 ```
 
-Adicionar la línea `command: ./run-production.sh` al fichero `docker-compose.yml` quedando de la siguiente forma:
+Add line `command: ./run-production.sh` to file `docker-compose.yml` thats finally could be like that:
 
 ```
 web:
@@ -111,9 +112,9 @@ web:
     - "8000:80"
 ```
 
-Para finalizar debe modificar el nombre del proyecto `projectname` en el fichero `conf/app.ini`.
+Finally modify name  `projectname` inside of `conf/app.ini`.
 
-### Enlaces relacionados con el tema
+### Usefull links
 
 * <a target="_blank" href="https://docs.docker.com/compose/django/">Docker Compose con proyectos Django</a>
 * <a target="_blank" href="https://docs.djangoproject.com/es/1.9/intro/tutorial01/">Primeros pasos en projectos con Django</a>

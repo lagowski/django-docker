@@ -1,6 +1,12 @@
-web:
-  image: projectname:1.0
-  volumes:
-    - .:/code
-  ports:
-    - "8000:80"
+version: '3'
+
+services:
+  web:
+    image: projectname:1.0
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/code
+    ports:
+      - "8000:80"
